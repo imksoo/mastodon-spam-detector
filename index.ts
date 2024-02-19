@@ -33,6 +33,8 @@ async function main() {
     return;
   }
 
+  console.log('Mastodon spam detecter started.');
+
   const masto = createStreamingAPIClient({
     streamingApiUrl: streamingApiUrl,
     accessToken: accessToken,
