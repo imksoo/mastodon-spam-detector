@@ -61,6 +61,10 @@ async function main() {
               comment: `spam`,
               forward: true,
             });
+
+            rest.v1.admin.accounts.$select(event.payload.account.id).action.create(
+              { type: 'suspend' }
+            );
           }
         });
       }
