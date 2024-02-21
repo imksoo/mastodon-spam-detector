@@ -9,6 +9,20 @@ const BaseUrl = process.env.BASE_URL;
 const streamingApiUrl = BaseUrl + '/api/v1/streaming';
 const accessToken = process.env.ACCESS_TOKEN;
 
+const showDebugLog = process.env.LOG_DEBUG === 'true';
+if (showDebugLog) {
+  console.debug = console.log;
+} else {
+  console.debug = () => { };
+}
+
+const showInfoLog = process.env.LOG_INFO === 'true';
+if (showInfoLog) {
+  console.info = console.log;
+} else {
+  console.info = () => { };
+}
+
 interface SpamSignature {
   check: (status: any) => { isSpam: boolean; reason?: string; };
   signatureName: string;
@@ -33,7 +47,7 @@ async function main() {
     return;
   }
 
-  console.log('Mastodon spam detecter started.');
+  console.info('Mastodon spam detecter started.');
 
   const masto = createStreamingAPIClient({
     streamingApiUrl: streamingApiUrl,
@@ -50,12 +64,12 @@ async function main() {
   for await (const event of masto.public.subscribe()) {
     switch (event.event) {
       case "update": {
-        console.log("New post: ", event.payload.content);
+        console.info("New post: ", event.payload.content);
 
         for (const { check, signatureName } of signatures) {
           const { isSpam, reason } = check(event.payload);
           if (isSpam) {
-            console.log(`Spam detected\u0007🚨: ${signatureName} ${reason} ${event.payload}`);
+            console.error(`Spam detected\u0007🚨: ${signatureName} ${reason} ${event.payload}`);
 
             rest.v1.reports.create({
               accountId: event.payload.account.id,

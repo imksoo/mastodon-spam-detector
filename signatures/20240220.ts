@@ -17,7 +17,7 @@ export default function (status: masto.mastodon.streaming.UpdateEvent['payload']
     followersCount === 0;
 
   const reason = `[Sig:20240220] isSpam = ${isSpam} : avatar: ${avatar} ends with /missing.png, mentions: ${mentions} > 2, followingCount: ${followingCount} = 0, followersCount: ${followersCount} = 0`;
-  console.log(reason);
+  console.debug(reason);
 
   return {
     isSpam,
