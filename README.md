@@ -1,24 +1,26 @@
 # Mastodon Spam Detector
 
-This program monitors the public timeline of a Mastodon instance in real-time using the Mastodon API. It checks new posts against a set of predefined spam signatures and reports any detected spam to the instance administrators.
+This program monitors the public timeline of a Mastodon instance in real-time using the Mastodon API. It checks new posts against a set of predefined spam signatures, reports any detected spam to the instance administrators, and automatically suspends accounts associated with spam posts.
 
 ## Features
 
 - Real-time monitoring of Mastodon's public timeline.
 - Spam detection based on customizable signature files.
-- Automatic reporting of detected spam posts to administrators.
+- Automatic reporting of detected spam posts to administrators, with the option to automatically suspend spam accounts.
+- Interactive feedback with system bell and emojis for detected spam.
+- Immediate start-up confirmation with a console log message.
 
 ## Requirements
 
 - Node.js
 - Access to a Mastodon instance's API.
-- An access token with permission to read the public timeline and report statuses.
+- An access token with permission to read the public timeline, report statuses, and suspend accounts.
 
 ## Setup
 
 ### Install Dependencies
 
-First, make sure you have Node.js installed. Then run the following command in the project directory to install the required dependencies:
+Ensure Node.js is installed. Run the following command in the project directory to install dependencies:
 
 ```bash
 npm install
@@ -26,41 +28,38 @@ npm install
 
 ### Configure Environment Variables
 
-Create a `.env` file in the root of the project directory with the following content:
+Create a `.env` file in the project root with:
 
 ```env
 BASE_URL=https://your.mastodon.instance
 ACCESS_TOKEN=your_access_token
 ```
 
-Replace `https://your.mastodon.instance` with the base URL of your Mastodon instance and `your_access_token` with a valid access token.
+Replace the placeholders with your Mastodon instance's base URL and a valid access token.
 
 ### Define Spam Signatures
 
-Place your spam detection signature files in the `signatures` directory. Each file should export a default function that checks a post and returns an object with `isSpam` (boolean) and `reason` (string, optional) properties.
+Place spam detection signature files in the `signatures` directory. Each should export a default function to check posts and return `{ isSpam: boolean; reason?: string; }`.
 
-Example signature file (`signatures/example.js`):
+Example (`signatures/example.js`):
 
 ```typescript
 export default function (status) {
-  const isSpam = /* your spam detection logic */;
-  return {
-    isSpam,
-    reason: isSpam ? "Reason for spam detection" : undefined,
-  };
+  const isSpam = /* spam detection logic */;
+  return { isSpam, reason: isSpam ? "Reason for spam detection" : undefined };
 }
 ```
 
 ## Running the Program
 
-To start the spam detector, run:
+Run the spam detector with:
 
 ```bash
 npx ts-node index.ts
 ```
 
-The program will continuously monitor the public timeline for new posts and check each post against the defined spam signatures.
+The program will monitor the public timeline for new posts and apply spam signatures.
 
 ## Reporting Spam
 
-When spam is detected, the program automatically reports the post to the Mastodon instance's administrators with an optional comment. The reporting mechanism uses the Mastodon API's report creation endpoint.
+Detected spam results in automatic reporting to administrators and account suspension. Uses the Mastodon API's reporting endpoint.
