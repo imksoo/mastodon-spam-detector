@@ -52,23 +52,25 @@ async function main() {
       case "update": {
         console.log("New post: ", event.payload.content);
 
-        signatures.forEach(({ check, signatureName }) => {
+        for (const { check, signatureName } of signatures) {
           const { isSpam, reason } = check(event.payload);
           if (isSpam) {
-            console.log(`Spam detected\u0007🚨: ${signatureName} ${reason} ${event.payload}`);
+            console.log(`Spam detected🚨: ${signatureName} ${reason} ${event.payload}`);
 
             rest.v1.reports.create({
               accountId: event.payload.account.id,
               statusIds: [event.payload.id],
-              comment: `spam`,
+              comment: `spam detected by sig-${signatureName} ${reason}`,
               forward: true,
             });
 
             rest.v1.admin.accounts.$select(event.payload.account.id).action.create(
               { type: 'suspend' }
             );
+
+            break;
           }
-        });
+        }
       }
       default: {
         break;
