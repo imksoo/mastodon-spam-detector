@@ -69,7 +69,7 @@ async function main() {
         for (const { check, signatureName } of signatures) {
           const { isSpam, reason } = check(event.payload);
           if (isSpam) {
-            console.error(`Spam detected\u0007🚨: ${signatureName} ${reason} ${event.payload}`);
+            console.error(`Spam detected\u0007🚨: ${signatureName} ${reason} ${JSON.stringify(event.payload)}`);
 
             rest.v1.reports.create({
               accountId: event.payload.account.id,
