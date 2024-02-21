@@ -50,15 +50,49 @@ export default function (status) {
 }
 ```
 
+以下は、`README.md`の**Running the Program**セクションに Docker Compose を使用してプログラムを実行するための指示を追加する例です。
+
+---
+
 ## Running the Program
 
-Run the spam detector with:
+### Directly with Node.js
+
+To start the spam detector, run:
 
 ```bash
 npx ts-node index.ts
 ```
 
-The program will monitor the public timeline for new posts and apply spam signatures.
+The program will continuously monitor the public timeline for new posts and check each post against the defined spam signatures.
+
+### Using Docker Compose
+
+To run the Mastodon Spam Detector using Docker Compose, ensure Docker and Docker Compose are installed on your system. Then follow these steps:
+
+1. Build the Docker image:
+
+```bash
+docker-compose build
+```
+
+This command builds a Docker image for the spam detector based on the specifications in the provided `Dockerfile`.
+
+2. Start the detector service:
+
+```bash
+docker-compose up -d
+```
+
+This command starts the spam detector service in detached mode, allowing it to run in the background. The service will automatically restart if it crashes or if the server is rebooted.
+
+Logs can be viewed with:
+
+```bash
+docker-compose logs -f detector
+```
+
+This setup uses the `.env` file for environment variables as specified in the `compose.yml`, so ensure your `.env` file is correctly configured before starting the service.
 
 ## Reporting Spam
 
