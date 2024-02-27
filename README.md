@@ -50,10 +50,6 @@ export default function (status) {
 }
 ```
 
-以下は、`README.md`の**Running the Program**セクションに Docker Compose を使用してプログラムを実行するための指示を追加する例です。
-
----
-
 ## Running the Program
 
 ### Directly with Node.js
